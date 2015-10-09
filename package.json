@@ -1,0 +1,32 @@
+{
+  "name": "etre",
+  "version": "0.0.1",
+  "description": "Pattern Matching",
+  "main": "dst/index.min.js",
+  "scripts": {
+    "build:min": "./node_modules/.bin/babel src | uglifyjs --screw-ie8 -mc -o dst/etre.min.js",
+    "build:dev": "./node_modules/.bin/babel src --source-maps inline -s -o dst/etre.js",
+    "build": "npm run build:dev; npm run build:min",
+    "test": "./node_modules/.bin/mocha --compilers js:babel/register ./tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/orodio/etre"
+  },
+  "keywords": [
+    "pattern",
+    "matching"
+  ],
+  "author": "orodio <james@bjorkman.ca>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "5.8.23",
+    "babel-plugin-lodash": "0.2.0",
+    "babel-plugin-uglify": "1.0.2",
+    "mocha": "2.3.3",
+    "uglify-js": "^2.4.24"
+  },
+  "dependencies": {
+    "lodash": "3.10.1"
+  }
+}
