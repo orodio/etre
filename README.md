@@ -46,3 +46,7 @@ const handleAction = etre(
   [["freeze account", NUMBER], (_key, accountNumber) => freeze(accountNumber)]
 )
 ```
+
+## License
+
+**etre** is Copyright (c) 2015 James Hunter [@cccc00](https://twitter.com/cccc00) and licensed under the MIT license. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
