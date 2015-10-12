@@ -1,86 +1,46 @@
-import { each } from "lodash"
+import each from "lodash/collection/each"
 import { equal } from "assert"
 
-import etre, {
-  whatType,
-  shallowShape,
-  STRING,
-  NUMBER,
-  ARRAY,
-  OBJECT,
-  BOOLEAN,
-  UNDEFINED,
-  FUNCTION,
-  NULL,
-  REGEXP,
-} from "../src/index"
+import { etre, STRING, NUMBER, OBJECT } from "../src"
 
-describe ("General Stuff", () => {
-  describe("#whatType", () => {
-    each([
-      ["str: hello", "hello", STRING],
-      ["str: world", "world", STRING],
-      ["str: hello world", "hello world", STRING],
-      ["num: 5", 5, NUMBER],
-      ["num: 5.0", 5.0, NUMBER],
-      ["num: 0.5", 0.5, NUMBER],
-      ["num: -5", -5, NUMBER],
-      ["num: -5.0", -5.0, NUMBER],
-      ["num: -0.5", -0.5, NUMBER],
-      ["fn: function() {}", function () {}, FUNCTION],
-      ["fn: () => {}", function () {}, FUNCTION],
-      ["fn: whatType", whatType, FUNCTION],
-      ["arr: []", [], ARRAY],
-      ["arr: [{}]", [{}], ARRAY],
-      ["arr: [1,2,3]", [1,2,3], ARRAY],
-      ["arr: [true]", [true], ARRAY],
-      ["obj: {}", {}, OBJECT],
-      ["obj: {foo: 'bar'}", {foo: "bar"}, OBJECT],
-      ["obj: {foo: []}", {foo: []}, OBJECT],
-      ["bool: true", true, BOOLEAN],
-      ["bool: false", false, BOOLEAN],
-      ["und: undefined", undefined, UNDEFINED],
-      ["null: null", null, NULL],
-      ["regexp: /[a-z]/", /[a-z]/, REGEXP],
-    ], ([desc, what, type]) => it(desc, () => equal(whatType(what), type)))
-  })
-
-  describe("#shallowShape", () => {
-    each([
-      [STRING, "world", true],
-      ["world", STRING, true],
-      [STRING, 1, false],
-      [1, STRING, false],
-      [1, 1, true],
-      ["bob", "bob", true],
-      [1, "bob", false],
-      ["bob", 1, false],
-      ["bob", "steve", false],
-      [1, 5, false],
-      [[1,2], [1,NUMBER], true],
-    ], ([a, b, e], i) => it(i + 1, () => equal(shallowShape(a,b), e)))
-  })
-
-  describe("#etre - simple", () => {
-    const fn1 = etre(
-      ["bob", x => "OMG BOB"],
-      [["bob"], x => "OMG BOB"],
-      [STRING, x => x + x],
-      [NUMBER, x => x * x],
-      [false, x => false],
-      [BOOLEAN, x => !x],
-      [[NUMBER, STRING, true], (num, text, _bool) => `${ text } - ${ num * 2 }`],
-      [[NUMBER, STRING, false], (num, text, _bool) => `${ text } - ${ num }`],
-      x => "STEVE BUSCEMI"
+describe ("etre", () => {
+  describe ("function 1 - single values", () => {
+    var func = etre(
+      [ "bob",  x => "pat" ],
+      [ "pat",  x => "bob" ],
+      [ STRING, x => `the string is ${ x }`],
+      [ 1,      x => 1],
+      [ 2,      x => 2 * 2],
+      [ NUMBER, x => `the number is ${ x }`],
     )
 
-    it ("bob",   () => equal(fn1("bob"), "OMG BOB"))
-    it ("hello", () => equal(fn1("hello"), "hellohello"))
-    it (5,       () => equal(fn1(5), 25))
-    it ("true",  () => equal(fn1(true), false) )
-    it ("false", () => equal(fn1(false), false) )
-    it ("fn1(3, 'word', true)", () => equal(fn1(3, "word", true), "word - 6"))
-    it ("fn1(3, 'word', true)", () => equal(fn1(2, "word", true), "word - 4"))
-    it ("fn1(3, 'word', false)", () => equal(fn1(3, "word", false), "word - 3"))
+    each([
+
+      ["bob", "bob", "pat"],
+      ["pat", "pat", "bob"],
+      ["foo", "foo", "the string is foo"],
+      ["1", 1, 1],
+      ["2", 2, 4],
+      ["35", 35, "the number is 35"],
+
+    ], ([desc, arg, expect]) => {
+      it (desc, () => { equal(func(arg), expect) })
+    })
+  })
+
+  describe ("function 2 - multiple  values", () => {
+    var func = etre(
+      [ ["reply", OBJECT, STRING], (_status, _value, state) => state ],
+      [ ["noreply", STRING],       (_status, state) => state + state ],
+    )
+
+    each([
+
+      [1, ["reply", {foo: "bar"}, "bar"], "bar"],
+      [2, ["noreply", "foo"], "foofoo"]
+
+    ], ([desc, args, expect]) => {
+      it (desc, () => { equal(func(...args), expect) })
+    })
   })
 })

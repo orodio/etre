@@ -1,12 +1,10 @@
 {
   "name": "etre",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Pattern Matching",
   "main": "dst/index.min.js",
   "scripts": {
-    "build:min": "./node_modules/.bin/babel src | uglifyjs --screw-ie8 -mc -o dst/etre.min.js",
-    "build:dev": "./node_modules/.bin/babel src --source-maps inline -s -o dst/etre.js",
-    "build": "npm run build:dev; npm run build:min",
+    "build": "./node_modules/.bin/browserify src --standalone etre -t babelify | uglifyjs --screw-ie8 -mc -o dist/etre.js",
     "test": "./node_modules/.bin/mocha --compilers js:babel/register ./tests"
   },
   "repository": {
@@ -21,12 +19,12 @@
   "license": "MIT",
   "devDependencies": {
     "babel": "5.8.23",
-    "babel-plugin-lodash": "0.2.0",
-    "babel-plugin-uglify": "1.0.2",
+    "babel-core": "5.8.25",
+    "babelify": "6.3.0",
+    "browserify": "11.2.0",
+    "facts": "0.2.2",
+    "lodash": "3.10.1",
     "mocha": "2.3.3",
-    "uglify-js": "^2.4.24"
-  },
-  "dependencies": {
-    "lodash": "3.10.1"
+    "uglify-js": "2.4.24"
   }
 }

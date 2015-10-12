@@ -1,7 +1,4 @@
 {
-  "plugins": [
-    "lodash"
-  ],
   "optional": [
     "es7.comprehensions",
     "es7.classProperties",
